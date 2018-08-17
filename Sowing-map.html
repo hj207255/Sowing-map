@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我的轮播图</title>
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <style>
+        .red{
+            color:red
+        }
+        .window{
+            width: 300px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+        .images{
+            display: flex;
+            align-items: flex-start;
+            transition: all .5s
+        }
+        #buttons{
+            display: block;
+            padding-top: 10px;
+            text-align: center;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="window">
+        <div class="images" id="images">
+            <img src="https://i.pinimg.com/originals/7a/af/0f/7aaf0f1d48f57b7779c0fbcf103c2d0f.jpg" alt="" width="300px" height="300px">
+            <img src="https://cf.ltkcdn.net/cats/images/std/64219-336x357-Smallest-cat.jpg" alt="" width="300px" height="300px">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg" alt="" width="300px" height="300px">
+        </div>
+    </div>
+    <span id="buttons">
+        <button>第1张</button>
+        <button>第2张</button>
+        <button>第3张</button>
+    </span>
+
+
+    <script>
+        var buttons=$("#buttons > button");
+        for(var i=0;i<buttons.length;i++){
+            buttons.eq(i).on("click",function(x){
+                //获取点击按钮的索引值
+                var index=$(x.currentTarget).index();
+                var s=index*300; //位移距离
+                $("#images").css({
+                    transform:"translateX(-"+s+"px)"
+                });
+                var n=index;
+                buttons.eq(n)
+                    .addClass("red")
+                    .siblings(".red").removeClass("red")
+            })
+        }
+
+        //实现自动轮播效果,自动点击效果
+        var n=0;
+        var zS=buttons.length;
+        //给第一张加高亮
+        buttons.eq(n%zS).trigger("click")
+            .addClass("red");
+
+        var timeId=setInterval(function(){
+            n+=1;
+            buttons.eq(n%zS).trigger("click")
+            //自动轮播且张数高亮
+                .addClass("red")
+                .siblings(".red").removeClass("red")
+        },1000);
+
+        //添加鼠标进入暂停，移出继续
+        $(".window").on("mouseenter",function(){
+            window.clearInterval(timeId)
+        });
+        $(".window").on("mouseleave",function(){
+            timeId=setInterval(function(){
+                n+=1;
+                buttons.eq(n%zS).trigger("click")
+                    .addClass("red")
+                    .siblings(".red").removeClass("red")
+            },1000)
+        })
+    </script>
+</body>
+</html>
